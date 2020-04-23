@@ -2,6 +2,26 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# APIs in EmployeeController
+GET     /user               controllers.UserController.findAll
+POST    /user               controllers.UserController.save(request:Request)
+GET     /user/:id           controllers.UserController.findById(id:Long)
+
+# APIs in MarkController
+GET     /mark               controllers.MarkController.findAll
+POST    /mark               controllers.MarkController.save(request:Request)
+GET     /mark/:id           controllers.MarkController.findById(id:Long)
+
+# APIs in ScoreController
+GET     /score               controllers.ScoreController.findAll
+POST    /score               controllers.ScoreController.save(request:Request)
+GET     /score/:id           controllers.ScoreController.findById(id:Long)
+
+# APIs in SubjectController
+GET     /subject               controllers.SubjectController.findAll
+POST    /subject               controllers.SubjectController.save(request:Request)
+GET     /subject/:id           controllers.SubjectController.findById(id:Long)
+
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 GET     /register.html              controllers.HomeController.register

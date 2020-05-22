@@ -19,7 +19,7 @@ public class SubjectController extends Controller {
     @Inject
     private SubjectToSubjectJson subjectToSubjectJson;
  
-    public Result findById(long id) {
+    public Result findById(String id) {
         return Optional.ofNullable(Subject.findById(id)).map(subjectToSubjectJson).map(json -> ok(Json.toJson(json))).orElse(notFound());
     }
  
@@ -28,6 +28,7 @@ public class SubjectController extends Controller {
         SubjectJson subjectJson = Json.fromJson(request.body().asJson(),SubjectJson.class);
  
         Subject subject = new Subject();
+        subject.id = subjectJson.id;
         subject.name = subjectJson.name;
         subject.teacher = subjectJson.teacher;
         subject.weight = subjectJson.weight;

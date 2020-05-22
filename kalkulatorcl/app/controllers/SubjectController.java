@@ -18,10 +18,7 @@ public class SubjectController extends Controller {
  
     @Inject
     private SubjectToSubjectJson subjectToSubjectJson;
- 
-    public Result findById(String id) {
-        return Optional.ofNullable(Subject.findById(id)).map(subjectToSubjectJson).map(json -> ok(Json.toJson(json))).orElse(notFound());
-    }
+
  
     public Result save(Http.Request request) {
  

@@ -12,8 +12,11 @@ public class SubjectToSubjectJson implements Function<Subject, SubjectJson> {
     public SubjectJson apply(Subject subject) {
 
         return new SubjectJson(
+                subject.seq_id,
                 subject.id,
-                subject.name );
+                subject.name,
+                subject.teacher, 
+                subject.weight );
     }
 
 }

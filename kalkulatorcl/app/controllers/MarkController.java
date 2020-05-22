@@ -31,7 +31,6 @@ public class MarkController extends Controller {
         Score score = new Score();
         User user = new User();
         Subject subject = new Subject();
-        mark.weight= markJson.weight;
         mark.score = Score.findById(markJson.score_id);
         mark.subject = Subject.findById(markJson.subject_id);
         mark.user = User.findById(markJson.user_id);

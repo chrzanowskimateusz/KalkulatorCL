@@ -18,4 +18,5 @@ libraryDependencies ++= Seq(
       "javax.xml.bind" % "jaxb-api" % "2.3.1",
       "javax.activation" % "activation" % "1.1.1",
       "org.glassfish.jaxb" % "jaxb-runtime" % "2.3.2",
+      "org.jsoup" % "jsoup" % "1.11.2",
     )

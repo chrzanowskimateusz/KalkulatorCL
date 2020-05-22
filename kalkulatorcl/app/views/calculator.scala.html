@@ -4,7 +4,12 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	
-    <title>Kalkulator Średniej PWR</title>
+	<title>Kalkulator Średniej PWR</title>
+	<form method ="post" action="@routes.HomeController.calculatorSubmit()">
+		<input type="text" name="script"> 
+		<input type="submit" value="Submit">
+	</form>
+	
     
 
 </body>

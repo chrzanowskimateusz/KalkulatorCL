@@ -20,14 +20,12 @@ public class Subject extends Model{
 
     public static final Finder<Long,Subject> FINDER = new Finder<>(Subject.class);
 
-    public static Subject findById(String id) {
-        return FINDER.ref(id);
+    public static Subject findById(long seq_id) {
+        return FINDER.ref(seq_id);
     }
  
     public static List<Subject> findAll() {
- 
         return FINDER.query().findList();
- 
     }
  
     public static List<Subject> findByName(String name) {

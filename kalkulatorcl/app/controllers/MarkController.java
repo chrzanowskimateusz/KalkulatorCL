@@ -32,7 +32,7 @@ public class MarkController extends Controller {
         User user = new User();
         Subject subject = new Subject();
         mark.score = Score.findById(markJson.score_id);
-        mark.subject = Subject.findById(markJson.subject_id);
+        mark.subject = Subject.findById(markJson.subject_seq_id);
         mark.user = User.findById(markJson.user_id);
         mark.save();
         return ok(Json.toJson(markToMarkJson.apply(mark)));

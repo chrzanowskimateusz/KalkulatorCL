@@ -14,7 +14,6 @@ public class Mark extends Model{
     @Id
     @GeneratedValue
     public long id;
-    public long weight;
 
     @ManyToOne
     public User user;

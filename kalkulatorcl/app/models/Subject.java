@@ -12,19 +12,20 @@ import java.util.List;
 public class Subject extends Model{
     @Id
     @GeneratedValue
-    public long id;
+    public long seq_id;
+    public String id;
     public String name;
+    public String teacher;
+    public long weight;
 
     public static final Finder<Long,Subject> FINDER = new Finder<>(Subject.class);
 
-    public static Subject findById(Long id) {
-        return FINDER.ref(id);
+    public static Subject findById(long seq_id) {
+        return FINDER.ref(seq_id);
     }
  
     public static List<Subject> findAll() {
- 
         return FINDER.query().findList();
- 
     }
  
     public static List<Subject> findByName(String name) {

@@ -14,7 +14,6 @@ public class Mark extends Model{
     @Id
     @GeneratedValue
     public long id;
-    public long weight;
 
     @ManyToOne
     public User user;
@@ -34,12 +33,5 @@ public class Mark extends Model{
     public static List<Mark> findAll() {
  
         return FINDER.query().findList();
-    }
- 
-    public static List<Mark> findByWeight(float weight) {
-        return FINDER.query().where().eq("weight",weight).findList();
-    }
-
-   
-
+    } 
 }

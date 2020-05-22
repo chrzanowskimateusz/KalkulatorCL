@@ -28,7 +28,9 @@ public class SubjectController extends Controller {
         SubjectJson subjectJson = Json.fromJson(request.body().asJson(),SubjectJson.class);
  
         Subject subject = new Subject();
-        subject.name= subjectJson.name;
+        subject.name = subjectJson.name;
+        subject.teacher = subjectJson.teacher;
+        subject.weight = subjectJson.weight;
         subject.save();
         return ok(Json.toJson(subjectToSubjectJson.apply(subject)));
  

@@ -12,6 +12,7 @@ import java.util.List;
 public class Subject extends Model{
     @Id
     @GeneratedValue
+    public long seq_id;
     public String id;
     public String name;
     public String teacher;

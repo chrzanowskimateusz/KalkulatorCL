@@ -12,12 +12,14 @@ import java.util.List;
 public class Subject extends Model{
     @Id
     @GeneratedValue
-    public long id;
+    public String id;
     public String name;
+    public String teacher;
+    public long weight;
 
     public static final Finder<Long,Subject> FINDER = new Finder<>(Subject.class);
 
-    public static Subject findById(Long id) {
+    public static Subject findById(String id) {
         return FINDER.ref(id);
     }
  

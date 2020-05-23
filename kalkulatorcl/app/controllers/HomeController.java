@@ -5,12 +5,21 @@ import play.mvc.*;
 import javax.inject.Inject;
 import play.data.FormFactory;
 import play.mvc.Http;
+import java.util.Map;
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -46,9 +55,8 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
-    public Result calculatorSubmit(Http.Request request){
-        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
-        String script = dynamicForm.get("script");
+    private String parseHtml(String script)
+    {
         Document doc = Jsoup.parse(script);
         String output = "";
         List<String> id = new ArrayList<String>();
@@ -89,7 +97,42 @@ public class HomeController extends Controller {
             }
            }
         }
-        return ok(value.toString());
+        return (value.toString());
+
+    }
+
+    public Result loginSubmit(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String userLogin = dynamicForm.get("login");
+        String userPassword = dynamicForm.get("password");
+        String response;
+        WebClient webClient = new WebClient();
+        try{
+            HtmlPage page = (HtmlPage) webClient
+                .getPage("https://edukacja.pwr.wroc.pl/EdukacjaWeb/studia.do");
+            HtmlForm form = page.getForms().get(0);
+            form.getInputByName("login").setValueAttribute(userLogin); 
+            form.getInputByName("password").setValueAttribute(userPassword); 
+            page = form.getInputByValue(" ").click();
+            page = page.getAnchorByText("Indeks").click();
+            WebResponse wynik = page.getWebResponse();
+            response = wynik.getContentAsString();
+           
+        }catch(IOException ioe){
+            response = "notok";
+        }
+
+        response = parseHtml(response);
+
+        return ok(response);
+    }
+
+    public Result calculatorSubmit(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String script = dynamicForm.get("script");
+        String response = parseHtml(script);
+    
+        return ok(response);
     }
 
 }

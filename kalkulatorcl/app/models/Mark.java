@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.List;
 
-
 @Entity
 public class Mark extends Model{
     @Id

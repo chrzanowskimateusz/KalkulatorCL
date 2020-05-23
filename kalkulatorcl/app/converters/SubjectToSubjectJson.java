@@ -15,7 +15,6 @@ public class SubjectToSubjectJson implements Function<Subject, SubjectJson> {
                 subject.seq_id,
                 subject.id,
                 subject.name,
-                subject.teacher, 
                 subject.weight );
     }
 

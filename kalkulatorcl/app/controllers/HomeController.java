@@ -63,42 +63,47 @@ public class HomeController extends Controller {
         List<String> name = new ArrayList<String>();
         List<Integer> weight = new ArrayList<Integer>();
         List<Float> value = new ArrayList<Float>();
-        for (Element table : doc.select("table.KOLOROWA")) {
-        for (Element row : table.select("tr")) {
-            Elements tds = row.select("td tr");
-           int i = 0;
-           for (Element element : tds)
-           {
-                if(i == 0)
+        for (Element table : doc.select("table.KOLOROWA"))
+        {
+            for (Element row : table.select("tr"))
+            {
+                Elements tds = row.select("td tr");
+                int i = 0;
+                for (Element element : tds)
                 {
-                    i ++;
-                    continue;
+                    if(i == 0)
+                    {
+                        i++;
+                        continue;
+                    }
+                        // output += element.text();
+                        // output += "\n";
+                        output = element.text();
+                        String[] array = output.split(" ");
+                        id.add(array[0]);
+                        name.add(array[1]);
+                    if (isNumeric(array[array.length-2]))
+                    {
+                        weight.add(Integer.parseInt(array[array.length-2]));
+                        value.add(Float.parseFloat(array[array.length-1]));
+                    }
+                    else
+                    {
+                        weight.add(Integer.parseInt(array[array.length-1]));
+                        value.add(0.0f);
+                    }
+                    i++;
                 }
-                // output += element.text();
-                // output += "\n";
-                output = element.text();
-                String[] array = output.split(" ");
-                id.add(array[0]);
-                name.add(array[1]);
-                if(isNumeric(array[array.length-2]))
-                {
-                    weight.add(Integer.parseInt(array[array.length-2]));
-                    value.add(Float.parseFloat(array[array.length-1]));
-                }
-                else
-                {
-                    weight.add(Integer.parseInt(array[array.length-1]));
-                    value.add(0.0f);
-                }
-                
-
-                i++;
-
             }
-           }
         }
-        return (value.toString());
-
+        float avg = 0.0f;
+        int ects = 0;
+        for (int i = 0; i < value.size(); ++i)
+        {
+            avg += value.get(i) * (float)weight.get(i);
+            ects += weight.get(i);
+        }
+        return (avg / (float)ects).toString();
     }
 
     public Result loginSubmit(Http.Request request){

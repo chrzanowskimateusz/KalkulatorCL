@@ -28,7 +28,7 @@ public class ScoreController extends Controller {
         ScoreJson scoreJson = Json.fromJson(request.body().asJson(),ScoreJson.class);
  
         Score score = new Score();
-        score.value= scoreJson.value;
+        score.value = scoreJson.value;
         score.save();
         return ok(Json.toJson(scoreToScoreJson.apply(score)));
  

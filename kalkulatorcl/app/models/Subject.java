@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.List;
 
-
 @Entity
 public class Subject extends Model{
     @Id
@@ -15,7 +14,6 @@ public class Subject extends Model{
     public long seq_id;
     public String id;
     public String name;
-    public String teacher;
     public long weight;
 
     public static final Finder<Long,Subject> FINDER = new Finder<>(Subject.class);

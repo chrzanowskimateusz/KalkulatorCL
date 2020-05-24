@@ -12,11 +12,6 @@ GET     /mark               controllers.MarkController.findAll
 POST    /mark               controllers.MarkController.save(request:Request)
 GET     /mark/:id           controllers.MarkController.findById(id:Long)
 
-# APIs in ScoreController
-GET     /score               controllers.ScoreController.findAll
-POST    /score               controllers.ScoreController.save(request:Request)
-GET     /score/:id           controllers.ScoreController.findById(id:Long)
-
 # APIs in SubjectController
 GET     /subject               controllers.SubjectController.findAll
 POST    /subject               controllers.SubjectController.save(request:Request)

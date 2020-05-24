@@ -14,8 +14,8 @@ public class MarkToMarkJson implements Function<Mark, MarkJson> {
         return new MarkJson(
                 mark.id,
                 mark.user.id,
-                mark.score.id,
-                mark.subject.seq_id);
+                mark.subject.id,
+                mark.value);
     }
 
 }

@@ -20,6 +20,7 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import models.*;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -55,7 +56,7 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
-    private String parseHtml(String script)
+    private String parseHtml(String script, boolean saveToDatabase, String userLogin)
     {
         Document doc = Jsoup.parse(script);
         String output = "";
@@ -81,7 +82,15 @@ public class HomeController extends Controller {
                         output = element.text();
                         String[] array = output.split(" ");
                         id.add(array[0]);
-                        name.add(array[1]);
+                        String fullName = "";
+                        for(int a = 1; a < array.length; a++)
+                        {
+                            if(isNumeric(array[a]))
+                                break;
+                            fullName += array[a] + " ";
+                            
+                        }
+                        name.add(fullName);
                     if (isNumeric(array[array.length-2]))
                     {
                         weight.add(Integer.parseInt(array[array.length-2]));
@@ -98,13 +107,44 @@ public class HomeController extends Controller {
         }
         float avg = 0.0f;
         int ects = 0;
-        for (int i = 0; i < value.size(); ++i)
+        for (int i = 0; i < id.size(); ++i)
         {
             if(value.get(i) == 0.0)
                 continue;
             avg += value.get(i) * (float)weight.get(i);
             ects += weight.get(i);
+
+            if(saveToDatabase == true)
+            {
+                if(Subject.findById(id.get(i)) == null)
+                {
+                    Subject subject = new Subject();
+                    subject.id= id.get(i);
+                    subject.name = name.get(i);
+                    subject.weight = weight.get(i);
+                    subject.save();
+                }
+
+                if(Mark.findByUserLoginAndSubjectId(userLogin, id.get(i)) != null){
+                    
+                    Mark mark = Mark.findByUserLoginAndSubjectId(userLogin, id.get(i));
+                    mark.user = User.findByLogin(userLogin);
+                    mark.subject = Subject.findById(id.get(i));
+                    mark.value = value.get(i);
+                    mark.update();
+                }
+                else{
+
+                    Mark mark = new Mark();
+                    mark.user = User.findByLogin(userLogin);
+                    mark.subject = Subject.findById(id.get(i));
+                    mark.value = value.get(i);
+                    mark.save();
+                }
+            }
+
         }
+
         return String.valueOf(avg / (float)ects);
     }
 
@@ -114,6 +154,13 @@ public class HomeController extends Controller {
         String userPassword = dynamicForm.get("password");
         String response;
         WebClient webClient = new WebClient();
+         // save user to database
+        if(!User.exists(userLogin))
+        {   
+            User user = new User();
+            user.login = userLogin;
+            user.save();
+        }
         try{
             HtmlPage page = (HtmlPage) webClient
                 .getPage("https://edukacja.pwr.wroc.pl/EdukacjaWeb/studia.do");
@@ -129,7 +176,10 @@ public class HomeController extends Controller {
             response = "notok";
         }
 
-        response = parseHtml(response);
+        response = parseHtml(response, true, userLogin);
+
+       
+        
 
         return ok(response);
     }
@@ -137,7 +187,7 @@ public class HomeController extends Controller {
     public Result calculatorSubmit(Http.Request request){
         DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
         String script = dynamicForm.get("script");
-        String response = parseHtml(script);
+        String response = parseHtml(script, false, "");
     
         return ok(response);
     }

@@ -20,8 +20,7 @@ public class Mark extends Model{
     @ManyToOne
     public Subject subject;
 
-    @ManyToOne
-    public Score score;
+    public float value;
 
     public static final Finder<Long,Mark> FINDER = new Finder<>(Mark.class);
 
@@ -33,4 +32,16 @@ public class Mark extends Model{
  
         return FINDER.query().findList();
     } 
+
+    public static Mark findByUserLogin(String userLogin) {
+        return FINDER.query().where().eq("user.login", userLogin).findOne();
+    }
+
+    public static Boolean exists(String userLogin) {
+        return FINDER.query().where().eq("user.login", userLogin).exists();
+    }
+    public static Mark findByUserLoginAndSubjectId(String userLogin, String subjectId)
+    {
+        return FINDER.query().where().eq("user.login", userLogin).eq("subject.id", subjectId).findOne();
+    }
 }

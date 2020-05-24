@@ -100,10 +100,12 @@ public class HomeController extends Controller {
         int ects = 0;
         for (int i = 0; i < value.size(); ++i)
         {
+            if(value.get(i) == 0.0)
+                continue;
             avg += value.get(i) * (float)weight.get(i);
             ects += weight.get(i);
         }
-        return (avg / (float)ects).toString();
+        return String.valueOf(avg / (float)ects);
     }
 
     public Result loginSubmit(Http.Request request){

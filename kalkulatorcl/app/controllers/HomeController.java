@@ -26,10 +26,10 @@ public class HomeController extends Controller {
 
     private final FormFactory formFactory;
 
-    private float avgMark(String subjectId)
+    private Float avgMark(String subjectId)
     {
         List<Mark> marks = Mark.findAll();
-        float avg = 0.0f;
+        Float avg = 0.0f;
         int count = 0;
         for (Mark mark : marks)
         {
@@ -44,19 +44,19 @@ public class HomeController extends Controller {
         return avg;
     }
 
-    private List<float> avgMarks()
+    private List<Float> avgMarks()
     {
-        List<float> avg = new ArrayList<float>();
+        List<Float> avg = new ArrayList<Float>();
         List<Subject> subjects = Subject.findAll();
         for (Subject subject : subjects)
             avg.add(avgMark(subject.id));
         return avg;
     }
 
-    private float userAvgMark(String userLogin)
+    private Float userAvgMark(String userLogin)
     {
         List<Mark> marks = Mark.findAll();
-        float avg = 0.0f;
+        Float avg = 0.0f;
         int count = 0;
         for (Mark mark : marks)
         {
@@ -71,7 +71,7 @@ public class HomeController extends Controller {
         return avg;
     }
 
-    private int markCount(float value, String subjectId)
+    private int markCount(Float value, String subjectId)
     {
         List<Mark> marks = Mark.findAll();
         int count = 0;
@@ -81,9 +81,9 @@ public class HomeController extends Controller {
         return count;
     }
 
-    private List<int> marksPerSubjectCount(String subjectId)
+    private List<Integer> marksPerSubjectCount(String subjectId)
     {
-        List<int> count = new ArrayList<int>();
+        List<Integer> count = new ArrayList<Integer>();
         count.add(markCount(2.0f, subjectId));
         count.add(markCount(3.0f, subjectId));
         count.add(markCount(3.5f, subjectId));
@@ -104,9 +104,9 @@ public class HomeController extends Controller {
         return count;
     }
 
-    private List<int> userMarksCount(String userLogin)
+    private List<Integer> userMarksCount(String userLogin)
     {
-        List<int> count = new ArrayList<int>();
+        List<Integer> count = new ArrayList<Integer>();
         count.add(userMarkCount(2.0f, userLogin));
         count.add(userMarkCount(3.0f, userLogin));
         count.add(userMarkCount(3.5f, userLogin));

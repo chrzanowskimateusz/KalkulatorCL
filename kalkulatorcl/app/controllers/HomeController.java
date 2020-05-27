@@ -20,14 +20,102 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import models.*;
 
-/**
- * This controller contains an action to handle HTTP requests
- * to the application's home page.
- */
 public class HomeController extends Controller {
 
     private final FormFactory formFactory;
+
+    private float avgMark(String subjectId)
+    {
+        List<Mark> marks = Mark.findAll();
+        float avg = 0.0f;
+        int count = 0;
+        for (Mark mark : marks)
+        {
+            if (mark.subject.id == subjectId)
+            {
+                avg += mark.value;
+                ++count;
+            }
+        }
+        if (count > 0)
+            avg /= (float)count;
+        return avg;
+    }
+
+    private List<float> avgMarks()
+    {
+        List<float> avg = new ArrayList<float>();
+        List<Subject> subjects = Subject.findAll();
+        for (Subject subject : subjects)
+            avg.add(avgMark(subject.id));
+        return avg;
+    }
+
+    private float userAvgMark(String userLogin)
+    {
+        List<Mark> marks = Mark.findAll();
+        float avg = 0.0f;
+        int count = 0;
+        for (Mark mark : marks)
+        {
+            if (mark.user.login == userLogin)
+            {
+                avg += mark.value;
+                ++count;
+            }
+        }
+        if (count > 0)
+            avg /= (float)count;
+        return avg;
+    }
+
+    private int markCount(float value, String subjectId)
+    {
+        List<Mark> marks = Mark.findAll();
+        int count = 0;
+        for (Mark mark : marks)
+            if (mark.subject.id == subjectId && Math.abs(value - mark.value) < 0.0001f)
+                ++count;
+        return count;
+    }
+
+    private List<int> marksPerSubjectCount(String subjectId)
+    {
+        List<int> count = new ArrayList<int>();
+        count.add(markCount(2.0f, subjectId));
+        count.add(markCount(3.0f, subjectId));
+        count.add(markCount(3.5f, subjectId));
+        count.add(markCount(4.0f, subjectId));
+        count.add(markCount(4.5f, subjectId));
+        count.add(markCount(5.0f, subjectId));
+        count.add(markCount(5.5f, subjectId));
+        return count;
+    }
+
+    private int userMarkCount(float value, String userLogin)
+    {
+        List<Mark> marks = Mark.findAll();
+        int count = 0;
+        for (Mark mark : marks)
+            if (mark.user.login == userLogin && Math.abs(value - mark.value) < 0.0001f)
+                ++count;
+        return count;
+    }
+
+    private List<int> userMarksCount(String userLogin)
+    {
+        List<int> count = new ArrayList<int>();
+        count.add(userMarkCount(2.0f, userLogin));
+        count.add(userMarkCount(3.0f, userLogin));
+        count.add(userMarkCount(3.5f, userLogin));
+        count.add(userMarkCount(4.0f, userLogin));
+        count.add(userMarkCount(4.5f, userLogin));
+        count.add(userMarkCount(5.0f, userLogin));
+        count.add(userMarkCount(5.5f, userLogin));
+        return count;
+    }
 
     @Inject
     public HomeController(final FormFactory formFactory) {
@@ -37,12 +125,6 @@ public class HomeController extends Controller {
         return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
     
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
     public Result index() {
         return ok(views.html.main.render());
     }
@@ -55,7 +137,7 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
-    private String parseHtml(String script)
+    private String parseHtml(String script, boolean saveToDatabase, String userLogin)
     {
         Document doc = Jsoup.parse(script);
         String output = "";
@@ -81,7 +163,15 @@ public class HomeController extends Controller {
                         output = element.text();
                         String[] array = output.split(" ");
                         id.add(array[0]);
-                        name.add(array[1]);
+                        String fullName = "";
+                        for(int a = 1; a < array.length; a++)
+                        {
+                            if(isNumeric(array[a]))
+                                break;
+                            fullName += array[a] + " ";
+                            
+                        }
+                        name.add(fullName);
                     if (isNumeric(array[array.length-2]))
                     {
                         weight.add(Integer.parseInt(array[array.length-2]));
@@ -98,12 +188,45 @@ public class HomeController extends Controller {
         }
         float avg = 0.0f;
         int ects = 0;
-        for (int i = 0; i < value.size(); ++i)
+        for (int i = 0; i < id.size(); ++i)
         {
+            if(value.get(i) == 0.0)
+                continue;
             avg += value.get(i) * (float)weight.get(i);
             ects += weight.get(i);
+
+            if(saveToDatabase == true)
+            {
+                if(Subject.findById(id.get(i)) == null)
+                {
+                    Subject subject = new Subject();
+                    subject.id= id.get(i);
+                    subject.name = name.get(i);
+                    subject.weight = weight.get(i);
+                    subject.save();
+                }
+
+                if(Mark.findByUserLoginAndSubjectId(userLogin, id.get(i)) != null){
+                    
+                    Mark mark = Mark.findByUserLoginAndSubjectId(userLogin, id.get(i));
+                    mark.user = User.findByLogin(userLogin);
+                    mark.subject = Subject.findById(id.get(i));
+                    mark.value = value.get(i);
+                    mark.update();
+                }
+                else{
+
+                    Mark mark = new Mark();
+                    mark.user = User.findByLogin(userLogin);
+                    mark.subject = Subject.findById(id.get(i));
+                    mark.value = value.get(i);
+                    mark.save();
+                }
+            }
+
         }
-        return (avg / (float)ects).toString();
+
+        return String.valueOf(avg / (float)ects);
     }
 
     public Result loginSubmit(Http.Request request){
@@ -112,6 +235,13 @@ public class HomeController extends Controller {
         String userPassword = dynamicForm.get("password");
         String response;
         WebClient webClient = new WebClient();
+         // save user to database
+        if(!User.exists(userLogin))
+        {   
+            User user = new User();
+            user.login = userLogin;
+            user.save();
+        }
         try{
             HtmlPage page = (HtmlPage) webClient
                 .getPage("https://edukacja.pwr.wroc.pl/EdukacjaWeb/studia.do");
@@ -127,7 +257,10 @@ public class HomeController extends Controller {
             response = "notok";
         }
 
-        response = parseHtml(response);
+        response = parseHtml(response, true, userLogin);
+
+       
+        
 
         return ok(response);
     }
@@ -135,9 +268,8 @@ public class HomeController extends Controller {
     public Result calculatorSubmit(Http.Request request){
         DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
         String script = dynamicForm.get("script");
-        String response = parseHtml(script);
+        String response = parseHtml(script, false, "");
     
         return ok(response);
     }
-
 }

@@ -19,10 +19,18 @@ public class User extends Model{
     public static User findById(Long id) {
         return FINDER.ref(id);
     }
+
+    public static User findByLogin(String login) {
+        return FINDER.query().where().eq("login", login).findOne();
+    }
  
     public static List<User> findAll() {
  
         return FINDER.query().findList();
+    }
+
+    public static Boolean exists(String login) {
+        return FINDER.query().where().eq("login", login).exists();
     }
 
 

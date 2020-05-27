@@ -22,13 +22,100 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import models.*;
 
-/**
- * This controller contains an action to handle HTTP requests
- * to the application's home page.
- */
 public class HomeController extends Controller {
 
     private final FormFactory formFactory;
+
+    private float avgMark(String subjectId)
+    {
+        List<Mark> marks = Mark.findAll();
+        float avg = 0.0f;
+        int count = 0;
+        for (Mark mark : marks)
+        {
+            if (mark.subject.id == subjectId)
+            {
+                avg += mark.value;
+                ++count;
+            }
+        }
+        if (count > 0)
+            avg /= (float)count;
+        return avg;
+    }
+
+    private List<float> avgMarks()
+    {
+        List<float> avg = new ArrayList<float>();
+        List<Subject> subjects = Subject.findAll();
+        for (Subject subject : subjects)
+            avg.add(avgMark(subject.id));
+        return avg;
+    }
+
+    private float userAvgMark(String userLogin)
+    {
+        List<Mark> marks = Mark.findAll();
+        float avg = 0.0f;
+        int count = 0;
+        for (Mark mark : marks)
+        {
+            if (mark.user.login == userLogin)
+            {
+                avg += mark.value;
+                ++count;
+            }
+        }
+        if (count > 0)
+            avg /= (float)count;
+        return avg;
+    }
+
+    private int markCount(float value, String subjectId)
+    {
+        List<Mark> marks = Mark.findAll();
+        int count = 0;
+        for (Mark mark : marks)
+            if (mark.subject.id == subjectId && Math.abs(value - mark.value) < 0.0001f)
+                ++count;
+        return count;
+    }
+
+    private List<int> marksPerSubjectCount(String subjectId)
+    {
+        List<int> count = new ArrayList<int>();
+        count.add(markCount(2.0f, subjectId));
+        count.add(markCount(3.0f, subjectId));
+        count.add(markCount(3.5f, subjectId));
+        count.add(markCount(4.0f, subjectId));
+        count.add(markCount(4.5f, subjectId));
+        count.add(markCount(5.0f, subjectId));
+        count.add(markCount(5.5f, subjectId));
+        return count;
+    }
+
+    private int userMarkCount(float value, String userLogin)
+    {
+        List<Mark> marks = Mark.findAll();
+        int count = 0;
+        for (Mark mark : marks)
+            if (mark.user.login == userLogin && Math.abs(value - mark.value) < 0.0001f)
+                ++count;
+        return count;
+    }
+
+    private List<int> userMarksCount(String userLogin)
+    {
+        List<int> count = new ArrayList<int>();
+        count.add(userMarkCount(2.0f, userLogin));
+        count.add(userMarkCount(3.0f, userLogin));
+        count.add(userMarkCount(3.5f, userLogin));
+        count.add(userMarkCount(4.0f, userLogin));
+        count.add(userMarkCount(4.5f, userLogin));
+        count.add(userMarkCount(5.0f, userLogin));
+        count.add(userMarkCount(5.5f, userLogin));
+        return count;
+    }
 
     @Inject
     public HomeController(final FormFactory formFactory) {
@@ -38,12 +125,6 @@ public class HomeController extends Controller {
         return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
     
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
     public Result index() {
         return ok(views.html.main.render());
     }
@@ -191,5 +272,4 @@ public class HomeController extends Controller {
     
         return ok(response);
     }
-
 }

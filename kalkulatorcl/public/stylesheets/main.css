@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 body
 {
-    background: url(@routes.Assets.at("images/bg.jpg") no-repeat center fixed;
+    background: url("img/bg.jpg") no-repeat center fixed;
     background-size: cover;
     color: #ffffff;
 
@@ -61,7 +61,7 @@ body
 
 }
 
-form input{
+.form input{
     height: 50px;
     width: 90%;
     padding: 0 10px;
@@ -69,6 +69,20 @@ form input{
     border: 1px solid silver;
     font-size: 18px;
     outline: none;
+}
+
+form input[class="avg_source"]
+{
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .form button
@@ -86,6 +100,11 @@ form input{
 }
 
 .form button:hover,.form button:active
+{
+    background: #3b9e40;
+}
+
+.form input[class="avg_source"]:hover
 {
     background: #3b9e40;
 }
@@ -113,3 +132,7 @@ form i[class="fas fa-lock"]:hover
 {
     cursor: pointer;
 }
+
+
+
+

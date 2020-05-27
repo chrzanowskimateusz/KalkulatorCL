@@ -28,12 +28,11 @@ public class MarkController extends Controller {
         MarkJson markJson = Json.fromJson(request.body().asJson(),MarkJson.class);
  
         Mark mark = new Mark();
-        Score score = new Score();
         User user = new User();
         Subject subject = new Subject();
-        mark.score = Score.findById(markJson.score_id);
-        mark.subject = Subject.findById(markJson.subject_seq_id);
+        mark.subject = Subject.findById(markJson.subject_id);
         mark.user = User.findById(markJson.user_id);
+        mark.value = markJson.value;
         mark.save();
         return ok(Json.toJson(markToMarkJson.apply(mark)));
  

@@ -133,6 +133,27 @@ form i[class="fas fa-lock"]:hover
     cursor: pointer;
 }
 
+/* view */
+
+
+#container{}
+
+.avg-msg{
+
+    font-weight: 300;
+    font-size: 2em;
+    color: white;
+    /*text-shadow: 0 0 10px rgba(0,0,0,0.8);*/
+    text-align: center;
+}
+
+.avg-view{
+    border : 0.5em;background: #4CAF50;
+    font-size: 3em;
+    display:inline-block;
+    color: white;
+    text-align: center;
+}
 
 
 

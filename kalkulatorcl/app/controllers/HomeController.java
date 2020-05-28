@@ -137,7 +137,9 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
-    private String parseHtml(String script, boolean saveToDatabase, String userLogin)
+   
+
+    private AvgAndListofMarks parseHtml(String script, boolean saveToDatabase, String userLogin)
     {
         Document doc = Jsoup.parse(script);
         String output = "";
@@ -188,6 +190,7 @@ public class HomeController extends Controller {
         }
         float avg = 0.0f;
         int ects = 0;
+        List<Mark> marks = new ArrayList<Mark>();
         for (int i = 0; i < id.size(); ++i)
         {
             if(value.get(i) == 0.0)
@@ -195,14 +198,18 @@ public class HomeController extends Controller {
             avg += value.get(i) * (float)weight.get(i);
             ects += weight.get(i);
 
+
+
+            Subject subject = new Subject();
+            subject.id= id.get(i);
+            subject.name = name.get(i);
+            subject.weight = weight.get(i);
+
+
             if(saveToDatabase == true)
             {
                 if(Subject.findById(id.get(i)) == null)
                 {
-                    Subject subject = new Subject();
-                    subject.id= id.get(i);
-                    subject.name = name.get(i);
-                    subject.weight = weight.get(i);
                     subject.save();
                 }
 
@@ -223,10 +230,18 @@ public class HomeController extends Controller {
                     mark.save();
                 }
             }
+            Mark mark = new Mark();
+            mark.user = User.findByLogin(userLogin);
+            mark.subject = Subject.findById(id.get(i));
+            mark.value = value.get(i);
+            marks.add(mark);
 
         }
 
-        return String.valueOf(avg / (float)ects);
+        AvgAndListofMarks result = new AvgAndListofMarks(String.valueOf(avg/(float)ects), marks);
+        
+
+        return result;
     }
 
     public Result loginSubmit(Http.Request request){
@@ -257,19 +272,32 @@ public class HomeController extends Controller {
             response = "notok";
         }
 
-        response = parseHtml(response, true, userLogin);
+        AvgAndListofMarks result = parseHtml(response, true, userLogin);
 
        
-        
+        String login = userLogin;
 
-        return ok(response);
+        return ok(views.html.view.render(login, result.avg, result.marks));
     }
 
     public Result calculatorSubmit(Http.Request request){
         DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
         String script = dynamicForm.get("script");
-        String response = parseHtml(script, false, "");
-    
-        return ok(response);
+        AvgAndListofMarks result = parseHtml(script, false, "");
+        String login = "";
+        return ok(views.html.view.render(login, result.avg, result.marks));
+    }
+
+
+
+
+    class AvgAndListofMarks{
+        String avg;
+        List<Mark> marks;
+        AvgAndListofMarks(String avg, List<Mark> marks)
+        {
+            this.avg = avg;
+            this.marks = marks;
+        }
     }
 }

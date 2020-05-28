@@ -27,12 +27,12 @@
 			<h1>Witaj @login.userLogin!</h1>
 			</br>
 			<div class='avg-msg'>Twoja średnia na podstawie danych z edukacjaCL:</div>
-			<div class='avg-view'>@avg.response</div>
+			<div class='avg-view'>@avg.response</div> <!-- chyba powinno być @avg.parseHtml() -->
 			<div class='list-of-marks'>
 				@for(mark <- marks){
 					<tr>
-						<td>@mark.subject.name</td>
-						<td>@mark.subject.weight</td>
+						<td>@mark.subject.name</td>   <!-- chyba okej, chociaż nie wiem czy z save() wyciągnie -->
+						<td>@mark.subject.weight</td> <!-- czy trzebaby inaczej zapisać -->
 						<td>@mark.value</td>
 				}
 			</div>

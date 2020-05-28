@@ -24,15 +24,20 @@
 			<div class='avg-msg'>Twoja średnia na podstawie danych z edukacjaCL:</div>
 			<div class='avg-view'>@avg</div>
 			<div class='list-of-marks'>
-				<table>
+				<table class="subjects-table" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>Nazwa Przedmiotu</td>
+						<td>ECTS</td>
+						<td>Ocena</td>
+					</tr>
 					@for(mark <- marks){
-						<tr>
-							<td>@mark.subject.name</td>
-							<td>@mark.subject.weight</td> 
-							<td>@mark.value</td>
-						</tr>
+					<tr>
+						<td class="subjects-table-value">@mark.subject.name</td>
+						<td class="subjects-table-value">@mark.subject.weight</td>
+						<td class="subjects-table-value">@mark.value</td>
+					</tr>
+					}
 				</table>
-				}
 			</div>
 		
 			

@@ -168,5 +168,15 @@ form i[class="fas fa-lock"]:hover
     text-align: center;
 }
 
+table{
+    margin:auto;
+    border:1px solid black;
+    width: auto;
+}
+
+table, table *{
+    border:1px solid black;
+}
+
 
 

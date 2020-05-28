@@ -24,12 +24,14 @@
 			<div class='avg-msg'>Twoja średnia na podstawie danych z edukacjaCL:</div>
 			<div class='avg-view'>@avg</div>
 			<div class='list-of-marks'>
-				@for(mark <- marks){
-					<tr>
-						<td>@mark.subject.name</td>   <!-- chyba okej, chociaż nie wiem czy z save() wyciągnie -->
-						<td>@mark.subject.weight</td> <!-- czy trzebaby inaczej zapisać -->
-						<td>@mark.value</td>
-					</tr>
+				<table>
+					@for(mark <- marks){
+						<tr>
+							<td>@mark.subject.name</td>
+							<td>@mark.subject.weight</td> 
+							<td>@mark.value</td>
+						</tr>
+				</table>
 				}
 			</div>
 		

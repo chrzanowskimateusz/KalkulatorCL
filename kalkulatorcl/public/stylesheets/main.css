@@ -39,6 +39,19 @@ body
     padding: 10% 0 0 ;
     margin: auto;
 }
+
+.view-main{
+    font-size:12pt;
+    font-family: 'Roboto Slab', serif;
+    position: relative;
+    z-index: 1;
+    background: rgba(116, 116, 116, 0.8);
+    max-width: 1000px;
+    margin: 0 auto 100px;
+    padding: 25px;
+    text-align: center;
+}
+
 .main-page-calc
 {
     position: relative;

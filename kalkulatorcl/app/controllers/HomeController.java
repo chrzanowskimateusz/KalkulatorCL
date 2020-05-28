@@ -232,7 +232,7 @@ public class HomeController extends Controller {
             }
             Mark mark = new Mark();
             mark.user = User.findByLogin(userLogin);
-            mark.subject = Subject.findById(id.get(i));
+            mark.subject = subject;
             mark.value = value.get(i);
             marks.add(mark);
 

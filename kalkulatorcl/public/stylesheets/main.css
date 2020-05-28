@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 body
 {
-    background: url("img/bg.jpg") no-repeat center fixed;
+    background: url("../images/bg.jpg") no-repeat center fixed;
     background-size: cover;
     color: #ffffff;
 

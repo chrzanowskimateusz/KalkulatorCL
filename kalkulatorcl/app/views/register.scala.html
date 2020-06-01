@@ -20,13 +20,12 @@
 		<div class="header">Kalkulator średniej</div>
 		<div class="main-page">
 			<div class="form">
-				<form class="register-form">
-					<input type="text" placeholder="login"/>
-					<input type="password" placeholder="hasło"/>
+				<form class="register-form" method="post" action="@routes.HomeController.registerSubmit()">
+					<input type="login" name="login" placeholder="login"/>
+					<input type="password" name="password" placeholder="hasło"/>
 					<input type="password" placeholder="powtórz hasło"/>
-					<input type="text" placeholder="email"/>
 
-					<div class="bc1"><button>Zarejestruj się</button></div>
+					<div class="bc1"><button type="submit">Zarejestruj się</button></div>
 					<p class="message">Już zarejestrowany? <a href="@routes.HomeController.index">Zaloguj się</a> </p>
 				</form>
 			</div>

@@ -26,97 +26,6 @@ public class HomeController extends Controller {
 
     private final FormFactory formFactory;
 
-    private Float avgMark(String subjectId)
-    {
-        List<Mark> marks = Mark.findAll();
-        Float avg = 0.0f;
-        int count = 0;
-        for (Mark mark : marks)
-        {
-            if (mark.subject.id == subjectId)
-            {
-                avg += mark.value;
-                ++count;
-            }
-        }
-        if (count > 0)
-            avg /= (float)count;
-        return avg;
-    }
-
-    private List<Float> avgMarks()
-    {
-        List<Float> avg = new ArrayList<Float>();
-        List<Subject> subjects = Subject.findAll();
-        for (Subject subject : subjects)
-            avg.add(avgMark(subject.id));
-        return avg;
-    }
-
-    private Float userAvgMark(String userLogin)
-    {
-        List<Mark> marks = Mark.findAll();
-        Float avg = 0.0f;
-        int count = 0;
-        for (Mark mark : marks)
-        {
-            if (mark.user.login == userLogin)
-            {
-                avg += mark.value;
-                ++count;
-            }
-        }
-        if (count > 0)
-            avg /= (float)count;
-        return avg;
-    }
-
-    private int markCount(Float value, String subjectId)
-    {
-        List<Mark> marks = Mark.findAll();
-        int count = 0;
-        for (Mark mark : marks)
-            if (mark.subject.id == subjectId && Math.abs(value - mark.value) < 0.0001f)
-                ++count;
-        return count;
-    }
-
-    private List<Integer> marksPerSubjectCount(String subjectId)
-    {
-        List<Integer> count = new ArrayList<Integer>();
-        count.add(markCount(2.0f, subjectId));
-        count.add(markCount(3.0f, subjectId));
-        count.add(markCount(3.5f, subjectId));
-        count.add(markCount(4.0f, subjectId));
-        count.add(markCount(4.5f, subjectId));
-        count.add(markCount(5.0f, subjectId));
-        count.add(markCount(5.5f, subjectId));
-        return count;
-    }
-
-    private int userMarkCount(float value, String userLogin)
-    {
-        List<Mark> marks = Mark.findAll();
-        int count = 0;
-        for (Mark mark : marks)
-            if (mark.user.login == userLogin && Math.abs(value - mark.value) < 0.0001f)
-                ++count;
-        return count;
-    }
-
-    private List<Integer> userMarksCount(String userLogin)
-    {
-        List<Integer> count = new ArrayList<Integer>();
-        count.add(userMarkCount(2.0f, userLogin));
-        count.add(userMarkCount(3.0f, userLogin));
-        count.add(userMarkCount(3.5f, userLogin));
-        count.add(userMarkCount(4.0f, userLogin));
-        count.add(userMarkCount(4.5f, userLogin));
-        count.add(userMarkCount(5.0f, userLogin));
-        count.add(userMarkCount(5.5f, userLogin));
-        return count;
-    }
-
     @Inject
     public HomeController(final FormFactory formFactory) {
         this.formFactory = formFactory;
@@ -137,8 +46,78 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
-   
+    public Result registerSubmit(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String userLogin = dynamicForm.get("login");
+        String userPassword = dynamicForm.get("password");
+        // save user to database
+        ServiceUser user = ServiceUser.findByServiceLogin(userLogin);
+        if(user == null)
+        {   
+            user = new ServiceUser();
+            user.login = userLogin;
+            user.password = userPassword;
+            user.user = null;
+            user.save();
+        }
+        else
+        {
+            return ok("Podany uzytkownik juz istnieje" + userLogin);
+        }
+        return ok("Zarejestrowano pomyslnie");
+    }
 
+    // Input: user's login and password at edukacja.pwr.wroc.pl
+    // Output: HTML of Indeks subpage
+    public Result loginSubmit(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String userLogin = dynamicForm.get("login");
+        String userPassword = dynamicForm.get("password");
+        String response;
+        WebClient webClient = new WebClient();
+        try{
+            HtmlPage page = (HtmlPage) webClient
+                .getPage("https://edukacja.pwr.wroc.pl/EdukacjaWeb/studia.do");
+            HtmlForm form = page.getForms().get(0);
+            form.getInputByName("login").setValueAttribute(userLogin); 
+            form.getInputByName("password").setValueAttribute(userPassword); 
+            page = form.getInputByValue(" ").click();
+            page = page.getAnchorByText("Indeks").click();
+            WebResponse wynik = page.getWebResponse();
+            response = wynik.getContentAsString();
+           
+        }catch(IOException ioe){
+            response = "notok";
+        }
+
+        // save user to database
+        if(!User.exists(userLogin))
+        {   
+            User user = new User();
+            user.login = userLogin;
+            user.save();
+        }
+
+        AvgAndListofMarks result = parseHtml(response, true, userLogin);
+
+       
+        String login = userLogin;
+
+        return ok(views.html.view.render(login, result.avg, result.marks));
+    }
+
+    // Submits script from Indeks subpage from edukacja.cl
+    public Result calculatorSubmit(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String script = dynamicForm.get("script");
+        AvgAndListofMarks result = parseHtml(script, false, "");
+        String login = "";
+        return ok(views.html.view.render(login, result.avg, result.marks));
+    }
+
+    // Converts inputed HTML to lists of marks
+    // if saveToDatabase = true saves to the database
+    // returns the list and the average 
     private AvgAndListofMarks parseHtml(String script, boolean saveToDatabase, String userLogin)
     {
         Document doc = Jsoup.parse(script);
@@ -243,53 +222,6 @@ public class HomeController extends Controller {
 
         return result;
     }
-
-    public Result loginSubmit(Http.Request request){
-        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
-        String userLogin = dynamicForm.get("login");
-        String userPassword = dynamicForm.get("password");
-        String response;
-        WebClient webClient = new WebClient();
-         // save user to database
-        if(!User.exists(userLogin))
-        {   
-            User user = new User();
-            user.login = userLogin;
-            user.save();
-        }
-        try{
-            HtmlPage page = (HtmlPage) webClient
-                .getPage("https://edukacja.pwr.wroc.pl/EdukacjaWeb/studia.do");
-            HtmlForm form = page.getForms().get(0);
-            form.getInputByName("login").setValueAttribute(userLogin); 
-            form.getInputByName("password").setValueAttribute(userPassword); 
-            page = form.getInputByValue(" ").click();
-            page = page.getAnchorByText("Indeks").click();
-            WebResponse wynik = page.getWebResponse();
-            response = wynik.getContentAsString();
-           
-        }catch(IOException ioe){
-            response = "notok";
-        }
-
-        AvgAndListofMarks result = parseHtml(response, true, userLogin);
-
-       
-        String login = userLogin;
-
-        return ok(views.html.view.render(login, result.avg, result.marks));
-    }
-
-    public Result calculatorSubmit(Http.Request request){
-        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
-        String script = dynamicForm.get("script");
-        AvgAndListofMarks result = parseHtml(script, false, "");
-        String login = "";
-        return ok(views.html.view.render(login, result.avg, result.marks));
-    }
-
-
-
 
     class AvgAndListofMarks{
         String avg;

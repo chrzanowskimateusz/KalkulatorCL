@@ -16,7 +16,7 @@ GET     /mark/:id           controllers.MarkController.findById(id:Long)
 GET     /subject               controllers.SubjectController.findAll
 POST    /subject               controllers.SubjectController.save(request:Request)
 
-# An example controller showing a sample home page
+# Main controller
 GET     /                           controllers.HomeController.index
 GET     /register.html              controllers.HomeController.register
 GET     /calculator.html            controllers.HomeController.calculator
@@ -24,6 +24,15 @@ GET     /calculator.html            controllers.HomeController.calculator
 POST    /calculator.html            controllers.HomeController.calculatorSubmit(request:Request)
 +nocsrf
 POST    /                           controllers.HomeController.loginSubmit(request:Request)
++nocsrf
+POST    /register.html              controllers.HomeController.registerSubmit(request:Request)
+
+
+# Controller for adminpanel
+GET     /login                      controllers.AdminController.loginSite
++nocsrf
+POST    /login                      controllers.AdminController.login(request:Request)
+GET     /panel                      controllers.AdminController.panel(request:Request)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

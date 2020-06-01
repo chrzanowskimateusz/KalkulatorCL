@@ -26,10 +26,10 @@ public class HomeController extends Controller {
 
     private final FormFactory formFactory;
 
-    private float avgMark(String subjectId)
+    private Float avgMark(String subjectId)
     {
         List<Mark> marks = Mark.findAll();
-        float avg = 0.0f;
+        Float avg = 0.0f;
         int count = 0;
         for (Mark mark : marks)
         {
@@ -44,19 +44,19 @@ public class HomeController extends Controller {
         return avg;
     }
 
-    private List<float> avgMarks()
+    private List<Float> avgMarks()
     {
-        List<float> avg = new ArrayList<float>();
+        List<Float> avg = new ArrayList<Float>();
         List<Subject> subjects = Subject.findAll();
         for (Subject subject : subjects)
             avg.add(avgMark(subject.id));
         return avg;
     }
 
-    private float userAvgMark(String userLogin)
+    private Float userAvgMark(String userLogin)
     {
         List<Mark> marks = Mark.findAll();
-        float avg = 0.0f;
+        Float avg = 0.0f;
         int count = 0;
         for (Mark mark : marks)
         {
@@ -71,7 +71,7 @@ public class HomeController extends Controller {
         return avg;
     }
 
-    private int markCount(float value, String subjectId)
+    private int markCount(Float value, String subjectId)
     {
         List<Mark> marks = Mark.findAll();
         int count = 0;
@@ -81,9 +81,9 @@ public class HomeController extends Controller {
         return count;
     }
 
-    private List<int> marksPerSubjectCount(String subjectId)
+    private List<Integer> marksPerSubjectCount(String subjectId)
     {
-        List<int> count = new ArrayList<int>();
+        List<Integer> count = new ArrayList<Integer>();
         count.add(markCount(2.0f, subjectId));
         count.add(markCount(3.0f, subjectId));
         count.add(markCount(3.5f, subjectId));
@@ -104,9 +104,9 @@ public class HomeController extends Controller {
         return count;
     }
 
-    private List<int> userMarksCount(String userLogin)
+    private List<Integer> userMarksCount(String userLogin)
     {
-        List<int> count = new ArrayList<int>();
+        List<Integer> count = new ArrayList<Integer>();
         count.add(userMarkCount(2.0f, userLogin));
         count.add(userMarkCount(3.0f, userLogin));
         count.add(userMarkCount(3.5f, userLogin));
@@ -137,7 +137,9 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
-    private String parseHtml(String script, boolean saveToDatabase, String userLogin)
+   
+
+    private AvgAndListofMarks parseHtml(String script, boolean saveToDatabase, String userLogin)
     {
         Document doc = Jsoup.parse(script);
         String output = "";
@@ -188,6 +190,7 @@ public class HomeController extends Controller {
         }
         float avg = 0.0f;
         int ects = 0;
+        List<Mark> marks = new ArrayList<Mark>();
         for (int i = 0; i < id.size(); ++i)
         {
             if(value.get(i) == 0.0)
@@ -195,14 +198,18 @@ public class HomeController extends Controller {
             avg += value.get(i) * (float)weight.get(i);
             ects += weight.get(i);
 
+
+
+            Subject subject = new Subject();
+            subject.id= id.get(i);
+            subject.name = name.get(i);
+            subject.weight = weight.get(i);
+
+
             if(saveToDatabase == true)
             {
                 if(Subject.findById(id.get(i)) == null)
                 {
-                    Subject subject = new Subject();
-                    subject.id= id.get(i);
-                    subject.name = name.get(i);
-                    subject.weight = weight.get(i);
                     subject.save();
                 }
 
@@ -223,10 +230,18 @@ public class HomeController extends Controller {
                     mark.save();
                 }
             }
+            Mark mark = new Mark();
+            mark.user = User.findByLogin(userLogin);
+            mark.subject = subject;
+            mark.value = value.get(i);
+            marks.add(mark);
 
         }
 
-        return String.valueOf(avg / (float)ects);
+        AvgAndListofMarks result = new AvgAndListofMarks(String.valueOf(avg/(float)ects), marks);
+        
+
+        return result;
     }
 
     public Result loginSubmit(Http.Request request){
@@ -257,19 +272,32 @@ public class HomeController extends Controller {
             response = "notok";
         }
 
-        response = parseHtml(response, true, userLogin);
+        AvgAndListofMarks result = parseHtml(response, true, userLogin);
 
        
-        
+        String login = userLogin;
 
-        return ok(response);
+        return ok(views.html.view.render(login, result.avg, result.marks));
     }
 
     public Result calculatorSubmit(Http.Request request){
         DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
         String script = dynamicForm.get("script");
-        String response = parseHtml(script, false, "");
-    
-        return ok(response);
+        AvgAndListofMarks result = parseHtml(script, false, "");
+        String login = "";
+        return ok(views.html.view.render(login, result.avg, result.marks));
+    }
+
+
+
+
+    class AvgAndListofMarks{
+        String avg;
+        List<Mark> marks;
+        AvgAndListofMarks(String avg, List<Mark> marks)
+        {
+            this.avg = avg;
+            this.marks = marks;
+        }
     }
 }

@@ -1,0 +1,53 @@
+@(login: String, avg: String, marks: List[Mark])
+<!DOCTYPE HTML>
+<html lang="pl">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	
+	<title>Kalkulator Średniej PWR</title>
+	
+	<link rel="stylesheet" type="text/css" media ="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+	<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Roboto&display=swap" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+<div id="container">
+	<div class="header">Kalkulator średniej</div>
+	
+		<div class='view-main'>			
+			<h1>Witaj @login!</h1>
+			</br>
+			<div class='avg-msg'>Twoja średnia na podstawie danych z edukacjaCL:</div>
+			<div class='avg-view'>@avg</div>
+			<br><br>
+			<div class='list-of-marks'>
+				<table class="subjects-table" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>Nazwa Przedmiotu</td>
+						<td>ECTS</td>
+						<td>Ocena</td>
+					</tr>
+					@for(mark <- marks){
+					<tr>
+						<td class="subjects-table-value">@mark.subject.name</td>
+						<td class="subjects-table-value">@mark.subject.weight</td>
+						<td class="subjects-table-value">@mark.value</td>
+					</tr>
+					}
+				</table>
+			</div>
+		
+			
+		</div>
+		<div style="clear: both;"></div>
+	</div>
+</div>
+
+
+
+</body>
+</html>

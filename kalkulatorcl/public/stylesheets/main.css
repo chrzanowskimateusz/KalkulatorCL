@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 body
 {
-    background-color: #747474;
+    background: url("../images/bg.jpg") no-repeat center fixed;
+    background-size: cover;
     color: #ffffff;
 
 }
@@ -17,44 +18,84 @@ body
 
 .header
 {
-    font-family: 'Josefin Sans', sans-serif;
-	font-size: 44px;
-	font-weight: bold;
-	color: white;
-	padding: 25px 0 30px 25px;
-	border-bottom: 1px solid #000000;
-	border-radius: 5px 5px 0 0;
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    font-size: 3em;
+    color: white;
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    margin: 0 auto;
+    padding-top: 50px;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    top: 0px;
 }
+
 
 
 .main-page
 {
-    width: 360px;
+    width: 380px;
     padding: 10% 0 0 ;
     margin: auto;
 }
 
+.view-main{
+    font-size:12pt;
+    font-family: 'Roboto Slab', serif;
+    position: relative;
+    z-index: 1;
+    background: rgba(116, 116, 116, 0.8);
+    max-width: 1000px;
+    margin: 0 auto 100px;
+    padding: 25px;
+    text-align: center;
+}
+
+.main-page-calc
+{
+    position: relative;
+    width: 720px;
+    padding: 10% 0 0 ;
+    background-color: bisque;
+    margin: auto;
+    float: left;
+}
 
 .form
 {
     position: relative;
     z-index: 1;
-    background: rgba(146, 146, 146, 0.8);
-    max-width: 360px;
+    background: rgba(116, 116, 116, 0.8);
+    max-width: 400px;
     margin: 0 auto 100px;
     padding: 45px;
     text-align: center;
 
 }
 
-form input{
-	height: 50px;
-	width: 90%;
-	padding: 0 10px;
-	border-radius: 3px;
-	border: 1px solid silver;
-	font-size: 18px;
-	outline: none;
+.form input{
+    height: 50px;
+    width: 90%;
+    padding: 0 10px;
+    border-radius: 3px;
+    border: 1px solid silver;
+    font-size: 18px;
+    outline: none;
+}
+
+form input[class="avg_source"]
+{
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .form button
@@ -76,26 +117,66 @@ form input{
     background: #3b9e40;
 }
 
+.form input[class="avg_source"]:hover
+{
+    background: #3b9e40;
+}
+
 .form .message
 {
-    margin: 15px 0 0;
+    margin: 12px 0 0;
 }
 
 .bc1
 {
     padding: 5px;
-    
+
 }
 
 form i
 {
-	position: absolute;
-	font-size: 25px;
-	color: grey;
-	margin: 15px 0 0 -45px;
+    position: absolute;
+    font-size: 25px;
+    color: grey;
+    margin: 15px 0 0 -45px;
 }
 
 form i[class="fas fa-lock"]:hover
 {
     cursor: pointer;
 }
+
+/* view */
+
+
+#container{}
+
+.avg-msg{
+
+    font-weight: 300;
+    font-size: 2em;
+    color: white;
+    /*text-shadow: 0 0 10px rgba(0,0,0,0.8);*/
+    text-align: center;
+}
+
+.avg-view{
+    border : 0.5em;background: #4CAF50;
+    font-size: 3em;
+    display:inline-block;
+    color: white;
+    text-align: center;
+}
+
+table{
+    margin:auto;
+    border:1px solid black;
+    width: auto;
+}
+
+table, table *{
+    border:1px solid black;
+}
+
+
+

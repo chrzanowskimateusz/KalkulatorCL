@@ -3,14 +3,39 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	
+
 	<title>Kalkulator Średniej PWR</title>
-	<form method ="post" action="@routes.HomeController.calculatorSubmit()">
-		<input type="text" name="script"> 
-		<input type="submit" value="Submit">
-	</form>
-	
-    
+
+	<link rel="stylesheet" type="text/css" media ="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+	<link rel="stylesheet" type="text/css" media ="screen" href="@routes.Assets.versioned("stylesheets/calc.css")">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+	<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Roboto&display=swap" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+	<script src="../js/ww.js"></script>
+	<script type="text/javascript" src="@routes.Assets.versioned("javascripts/addbyhand.js")"></script>
+</head>
+
+<body>
+<div id="container">
+	<div class="header">Kalkulator średniej</div>
+
+	<div id='avg'>
+		<div class='actions'>
+			<form method="POST" action="@routes.HomeController.calculatorSubmit">
+				<fieldset>
+					<textarea name='script'></textarea>
+				</fieldset>
+				<div class="bc1"><input class="avg_source" type="submit" value='Oblicz z pliku źródłowego'></iput></div>
+			</form>
+			<div class="bc1"><button id='avg_more'>Wprowadz własne</button></div>
+		</div>
+
+	</div>
+	<div style="clear: both;"></div>
+</div>
+</div>
+
+
 
 </body>
 </html>

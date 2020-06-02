@@ -178,5 +178,13 @@ table, table *{
     border:1px solid black;
 }
 
-
-
+#confirm{
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    color: white;
+    margin: 0 auto;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    top: 0px;
+}

@@ -8,6 +8,13 @@ body
 
 }
 
+#adminpanel
+{
+    background: url("../images/bg2.jpg") no-repeat center fixed;
+    background-size: cover;
+    color: #ffffff;
+}
+
 #container
 {
     width: 1000px;

@@ -25,12 +25,14 @@
 			<div class='avg-view'>@avg</div>
 			<br><br>
 			<div class='list-of-marks'>
-				<table class="subjects-table" cellspacing="0" cellpadding="0">
+				<table class="subjects-table">
+					<thead>
 					<tr>
-						<td>Nazwa Przedmiotu</td>
-						<td>ECTS</td>
-						<td>Ocena</td>
+						<th>Nazwa Przedmiotu</th>
+						<th>ECTS</th>
+						<th>Ocena</th>
 					</tr>
+					</thead>
 					@for(mark <- marks){
 					<tr>
 						<td class="subjects-table-value">@mark.subject.name</td>

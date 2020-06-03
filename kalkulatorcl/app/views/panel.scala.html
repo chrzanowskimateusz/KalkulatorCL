@@ -28,22 +28,22 @@
         <div class='filter-select'>
             <div class='avg-msg'>Wybierz przedmiot z listy:</div>
             <form class="filter-form" method="post" action="@routes.AdminController.login()">
-                @for(mark <- marks){
                 <select name="choice">
+                @for(mark <- marks){
                     <option value=@mark.subject.name>@mark.subject.name</option>
-                </select>
                 }
+                </select>
                 <div class="bc1"><button type = "submit" >Sprawdź statystykę ocen przedmiotu</button></div>
             </form>
         </div>
         <div class='filter-select'>
             <div class='avg-msg'>Wybierz użytkownika z listy:</div>
             <form class="filter-form" method="post" action="@routes.AdminController.login()">
-                @for(user <- users){
                 <select name="choice">
+                @for(user <- users){
                     <option value=@user.login>@user.login</option>
-                </select>
                 }
+                </select>
                 <div class="bc1"><button type = "submit" >Sprawdź statystykę użytkownika</button></div>
             </form>
         </div>

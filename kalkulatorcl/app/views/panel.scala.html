@@ -1,0 +1,77 @@
+@(avg: String, marks: List[Mark], users, List[User])
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Kalkulator Średniej PWR</title>
+
+    <meta name="description" content="Proste narzędzie do liczenia średniej ważonej z kursów" />
+    <meta name="keywords" content="pwr, kalkulator, średniej" />
+
+    <link rel="stylesheet" type="text/css" media ="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body id="adminpanel">
+<div id="container">
+    <div class="header">Kalkulator średniej</div>
+
+    <div class='view-main'>
+        <h1>Panel statystyk</h1>
+        <br>
+        <div class='avg-msg'>Obecna średnia użytkowników:</div>
+        <div class='avg-view'>@avg.response</div>
+        <br><br>
+        <div class='filter-select'>
+            <div class='avg-msg'>Wybierz przedmiot z listy:</div>
+            <form class="filter-form" method="post" action="@routes.AdminController.login()">
+                @for(user <- users){
+                <select name="choice">
+                    <option value=@mark.subject.name>@user.login</option>
+                </select>
+                }
+                <div class="bc1"><button type = "submit" >Sprawdź statystykę ocen przedmiotu</button></div>
+            </form>
+        </div>
+        <div class='filter-select'>
+            <div class='avg-msg'>Wybierz użytkownika z listy:</div>
+            <form class="filter-form" method="post" action="@routes.AdminController.login()">
+                @for(user <- users){
+                <select name="choice">
+                    <option value=@user.login>@user.login</option>
+                </select>
+                }
+                <div class="bc1"><button type = "submit" >Sprawdź statystykę użytkownika</button></div>
+            </form>
+        </div>
+        <br><br>
+        <div class='list-of-marks'>
+            <table class="subjects-table">
+                <thead>
+                <tr>
+                    <th>Nazwa Przedmiotu</th>
+                    <th>Średnia ocena</th>
+                </tr>
+                </thead>
+                @for(mark <- marks){
+                <tr>
+                    <td class="subjects-table-value">@mark.subject.name</td>
+                    <td class="subjects-table-value">@mark.avg</td>
+                </tr>
+                }
+            </table>
+        </div>
+
+
+    </div>
+    <div style="clear: both;"></div>
+</div>
+</div>
+
+
+
+</body>
+</html>

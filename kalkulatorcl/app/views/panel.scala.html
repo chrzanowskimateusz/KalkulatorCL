@@ -1,4 +1,4 @@
-@(avg: String, marks: List[Mark], users, List[User])
+@(avg: String, marks: List[Mark], users: List[User], avgs: List[String])
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,14 +23,14 @@
         <h1>Panel statystyk</h1>
         <br>
         <div class='avg-msg'>Obecna średnia użytkowników:</div>
-        <div class='avg-view'>@avg.response</div>
+        <div class='avg-view'>@avg</div>
         <br><br>
         <div class='filter-select'>
             <div class='avg-msg'>Wybierz przedmiot z listy:</div>
             <form class="filter-form" method="post" action="@routes.AdminController.login()">
-                @for(user <- users){
+                @for(mark <- marks){
                 <select name="choice">
-                    <option value=@mark.subject.name>@user.login</option>
+                    <option value=@mark.subject.name>@mark.subject.name</option>
                 </select>
                 }
                 <div class="bc1"><button type = "submit" >Sprawdź statystykę ocen przedmiotu</button></div>
@@ -56,10 +56,10 @@
                     <th>Średnia ocena</th>
                 </tr>
                 </thead>
-                @for(mark <- marks){
+                @for((avg,mark) <- avgs.zip(marks)){
                 <tr>
                     <td class="subjects-table-value">@mark.subject.name</td>
-                    <td class="subjects-table-value">@mark.avg</td>
+                    <td class="subjects-table-value">@avg</td>
                 </tr>
                 }
             </table>

@@ -37,11 +37,11 @@ public class AdminController extends Controller {
         ServiceUser user = ServiceUser.findByServiceLogin(userLogin);
         if(user == null)
         {   
-            return ok("Podany uzytkownik nie istnieje");
+            return ok(views.html.confirm.render("Podany użytkownik nie istnieje!", "register.html"));
         }
         if(!user.password.equals(userPassword))
         {
-            return ok("Bledne haslo");
+            return ok(views.html.confirm.render("Błędne hasło!", "register.html"));
         }
         return redirect("/panel")
             .addingToSession(request, "connected", user.login);
@@ -51,8 +51,25 @@ public class AdminController extends Controller {
         return request
             .session()
             .get("connected")
-            .map(user -> ok("Hello " + user))
-            .orElseGet(() -> unauthorized("Oops, you are not connected"));
+            .map(user -> ok(views.html.panel.render(String.valueOf(avgAll()), Mark.findAll(), User.findAll(), avgMarks())))
+            .orElseGet(() -> unauthorized("Unauthorized access."));
+    }
+
+    private Float avgAll()
+    {
+        List<Mark> marks = Mark.findAll();
+        Float avg = 0.0f;
+        int count = 0;
+        for (Mark mark : marks)
+        {
+            if(mark.value == 0.0f)
+                continue;
+            avg += mark.value;
+            ++count;
+        }
+        if (count > 0)
+            avg /= (float)count;
+        return avg;
     }
     
     private Float avgMark(String subjectId)
@@ -64,6 +81,8 @@ public class AdminController extends Controller {
         {
             if (mark.subject.id == subjectId)
             {
+                if(mark.value == 0.0f)
+                    continue;
                 avg += mark.value;
                 ++count;
             }
@@ -73,12 +92,12 @@ public class AdminController extends Controller {
         return avg;
     }
 
-    private List<Float> avgMarks()
+    private List<String> avgMarks()
     {
-        List<Float> avg = new ArrayList<Float>();
+        List<String> avg = new ArrayList<String>();
         List<Subject> subjects = Subject.findAll();
         for (Subject subject : subjects)
-            avg.add(avgMark(subject.id));
+            avg.add(String.valueOf(avgMark(subject.id)));
         return avg;
     }
 

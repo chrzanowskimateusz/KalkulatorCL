@@ -57,7 +57,7 @@
                     <th>Średnia ocena</th>
                 </tr>
                 </thead>
-                @for((avg,mark) <- avgs.zip(marks)){
+                @for((mark,avg) <- marks.zip(avgs)){
                 <tr>
                     <td class="subjects-table-value">@mark.subject.name</td>
                     <td class="subjects-table-value">@avg</td>

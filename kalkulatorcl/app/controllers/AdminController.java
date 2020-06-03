@@ -79,10 +79,8 @@ public class AdminController extends Controller {
         int count = 0;
         for (Mark mark : marks)
         {
-            if (mark.subject.id == subjectId)
+            if (mark.subject.id.equals(subjectId))
             {
-                if(mark.value == 0.0f)
-                    continue;
                 avg += mark.value;
                 ++count;
             }
@@ -97,7 +95,9 @@ public class AdminController extends Controller {
         List<String> avg = new ArrayList<String>();
         List<Subject> subjects = Subject.findAll();
         for (Subject subject : subjects)
+        {
             avg.add(String.valueOf(avgMark(subject.id)));
+        }
         return avg;
     }
 
@@ -108,7 +108,7 @@ public class AdminController extends Controller {
         int count = 0;
         for (Mark mark : marks)
         {
-            if (mark.user.login == userLogin)
+            if (mark.user.login.equals(userLogin))
             {
                 avg += mark.value;
                 ++count;
@@ -124,7 +124,7 @@ public class AdminController extends Controller {
         List<Mark> marks = Mark.findAll();
         int count = 0;
         for (Mark mark : marks)
-            if (mark.subject.id == subjectId && Math.abs(value - mark.value) < 0.0001f)
+            if (mark.subject.id.equals(subjectId)&& Math.abs(value - mark.value) < 0.0001f)
                 ++count;
         return count;
     }
@@ -147,7 +147,7 @@ public class AdminController extends Controller {
         List<Mark> marks = Mark.findAll();
         int count = 0;
         for (Mark mark : marks)
-            if (mark.user.login == userLogin && Math.abs(value - mark.value) < 0.0001f)
+            if (mark.user.login.equals(userLogin) && Math.abs(value - mark.value) < 0.0001f)
                 ++count;
         return count;
     }

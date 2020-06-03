@@ -33,6 +33,11 @@ public class Mark extends Model{
         return FINDER.query().findList();
     } 
 
+    public static int deleteAllByUserLogin(String userLogin) {
+ 
+        return FINDER.query().where().eq("user.login", userLogin).delete();
+    } 
+
     public static Mark findByUserLogin(String userLogin) {
         return FINDER.query().where().eq("user.login", userLogin).findOne();
     }

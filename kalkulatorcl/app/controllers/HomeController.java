@@ -105,6 +105,10 @@ public class HomeController extends Controller {
             user.login = userLogin;
             user.save();
         }
+        else
+        {
+            Mark.deleteAllByUserLogin(userLogin);
+        }
 
         AvgAndListofMarks result = parseHtml(response, true, userLogin);
 
@@ -199,29 +203,13 @@ public class HomeController extends Controller {
                 {
                     subject.save();
                 }
-
-                if(Mark.findByUserLoginAndSubjectId(userLogin, id.get(i)) != null){
-                    
-                    Mark mark = Mark.findByUserLoginAndSubjectId(userLogin, id.get(i));
-                    mark.user = User.findByLogin(userLogin);
-                    mark.subject = Subject.findById(id.get(i));
-                    mark.value = value.get(i);
-                    mark.update();
-                }
-                else{
-
-                    Mark mark = new Mark();
-                    mark.user = User.findByLogin(userLogin);
-                    mark.subject = Subject.findById(id.get(i));
-                    mark.value = value.get(i);
-                    mark.save();
-                }
+                Mark mark = new Mark();
+                mark.user = User.findByLogin(userLogin);
+                mark.subject = Subject.findById(id.get(i));
+                mark.value = value.get(i);
+                mark.save();
+                marks.add(mark);
             }
-            Mark mark = new Mark();
-            mark.user = User.findByLogin(userLogin);
-            mark.subject = subject;
-            mark.value = value.get(i);
-            marks.add(mark);
 
         }
 

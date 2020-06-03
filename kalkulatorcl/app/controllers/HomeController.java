@@ -48,6 +48,10 @@ public class HomeController extends Controller {
         return ok(views.html.calculator.render());
     }
 
+    public Result panel() {
+        return ok(views.html.panel.render());
+    }
+
     public Result registerSubmit(Http.Request request){
         DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
         String userLogin = dynamicForm.get("login");

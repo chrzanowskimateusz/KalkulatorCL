@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.jsoup.HttpStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import models.*;
 
 public class HomeController extends Controller {
@@ -62,7 +64,7 @@ public class HomeController extends Controller {
         }
         else
         {
-            return ok("Podany uzytkownik juz istnieje" + userLogin);
+            return ok(views.html.confirm.render("Podany użytkownik już istnieje!", "register.html"));
         }
         return ok("Zarejestrowano pomyslnie");
     }
@@ -86,8 +88,14 @@ public class HomeController extends Controller {
             WebResponse wynik = page.getWebResponse();
             response = wynik.getContentAsString();
            
-        }catch(IOException ioe){
-            response = "notok";
+        }catch(HttpStatusException ioe){
+            return ok(views.html.confirm.render("Błąd połączenia z edukacją! Sprawdź poprawność loginu i hasła.", "register.html"));
+        }
+        catch(IOException ioe){
+            return ok(views.html.confirm.render("Błąd połączenia z edukacją! Sprawdź poprawność loginu i hasła.", "register.html"));
+        }
+        catch(ElementNotFoundException ioe){
+            return ok(views.html.confirm.render("Błąd połączenia z edukacją! Sprawdź poprawność loginu i hasła.", "register.html"));
         }
 
         // save user to database

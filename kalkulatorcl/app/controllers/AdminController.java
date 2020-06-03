@@ -54,6 +54,42 @@ public class AdminController extends Controller {
             .map(user -> ok(views.html.panel.render(String.valueOf(avgAll()), Mark.findAll(), User.findAll(), avgMarks())))
             .orElseGet(() -> unauthorized("Unauthorized access."));
     }
+    public Result panelUser(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String userLogin = dynamicForm.get("choice");
+        List<String> values = new ArrayList<String>();
+        values.add("2.0");
+        values.add("3.0");
+        values.add("3.5");
+        values.add("4.0");
+        values.add("4.5");
+        values.add("5.0");
+        values.add("5.5");
+        return request
+            .session()
+            .get("connected")
+            .map(user -> ok(views.html.stats.render(false, "", userLogin, "", "", userMarksCount(userLogin), values)))
+            .orElseGet(() -> unauthorized("Unauthorized access."));
+    }
+    public Result panelSubject(Http.Request request){
+        DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
+        String subject = dynamicForm.get("choice");
+        List<String> values = new ArrayList<String>();
+        values.add("2.0");
+        values.add("3.0");
+        values.add("3.5");
+        values.add("4.0");
+        values.add("4.5");
+        values.add("5.0");
+        values.add("5.5");
+        Subject sub = Subject.findByName(subject).get(0);
+        String id = sub.id;
+        return request
+            .session()
+            .get("connected")
+            .map(user -> ok(views.html.stats.render(true, subject, user, String.valueOf(avgMark(id)), "", marksPerSubjectCount(id), values)))
+            .orElseGet(() -> unauthorized("Unauthorized access."));
+    }
 
     private Float avgAll()
     {
@@ -129,16 +165,16 @@ public class AdminController extends Controller {
         return count;
     }
 
-    private List<Integer> marksPerSubjectCount(String subjectId)
+    private List<String> marksPerSubjectCount(String subjectId)
     {
-        List<Integer> count = new ArrayList<Integer>();
-        count.add(markCount(2.0f, subjectId));
-        count.add(markCount(3.0f, subjectId));
-        count.add(markCount(3.5f, subjectId));
-        count.add(markCount(4.0f, subjectId));
-        count.add(markCount(4.5f, subjectId));
-        count.add(markCount(5.0f, subjectId));
-        count.add(markCount(5.5f, subjectId));
+        List<String> count = new ArrayList<String>();
+        count.add(String.valueOf(markCount(2.0f, subjectId)));
+        count.add(String.valueOf(markCount(3.0f, subjectId)));
+        count.add(String.valueOf(markCount(3.5f, subjectId)));
+        count.add(String.valueOf(markCount(4.0f, subjectId)));
+        count.add(String.valueOf(markCount(4.5f, subjectId)));
+        count.add(String.valueOf(markCount(5.0f, subjectId)));
+        count.add(String.valueOf(markCount(5.5f, subjectId)));
         return count;
     }
 
@@ -152,16 +188,16 @@ public class AdminController extends Controller {
         return count;
     }
 
-    private List<Integer> userMarksCount(String userLogin)
+    private List<String> userMarksCount(String userLogin)
     {
-        List<Integer> count = new ArrayList<Integer>();
-        count.add(userMarkCount(2.0f, userLogin));
-        count.add(userMarkCount(3.0f, userLogin));
-        count.add(userMarkCount(3.5f, userLogin));
-        count.add(userMarkCount(4.0f, userLogin));
-        count.add(userMarkCount(4.5f, userLogin));
-        count.add(userMarkCount(5.0f, userLogin));
-        count.add(userMarkCount(5.5f, userLogin));
+        List<String> count = new ArrayList<String>();
+        count.add(String.valueOf(userMarkCount(2.0f, userLogin)));
+        count.add(String.valueOf(userMarkCount(3.0f, userLogin)));
+        count.add(String.valueOf(userMarkCount(3.5f, userLogin)));
+        count.add(String.valueOf(userMarkCount(4.0f, userLogin)));
+        count.add(String.valueOf(userMarkCount(4.5f, userLogin)));
+        count.add(String.valueOf(userMarkCount(5.0f, userLogin)));
+        count.add(String.valueOf(userMarkCount(5.5f, userLogin)));
         return count;
     }
 }

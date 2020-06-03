@@ -33,6 +33,10 @@ GET     /login                      controllers.AdminController.loginSite
 +nocsrf
 POST    /login                      controllers.AdminController.login(request:Request)
 GET     /panel                      controllers.AdminController.panel(request:Request)
++nocsrf
+POST    /panelSubject               controllers.AdminController.panelSubject(request:Request)
++nocsrf
+POST    /panelUser                  controllers.AdminController.panelUser(request:Request)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -47,11 +47,6 @@ public class HomeController extends Controller {
     public Result calculator() {
         return ok(views.html.calculator.render());
     }
-
-    public Result panel() {
-        return ok(views.html.panel.render());
-    }
-
     public Result registerSubmit(Http.Request request){
         DynamicForm dynamicForm = formFactory.form().bindFromRequest(request);
         String userLogin = dynamicForm.get("login");
@@ -70,7 +65,7 @@ public class HomeController extends Controller {
         {
             return ok(views.html.confirm.render("Podany użytkownik już istnieje!", "register.html"));
         }
-        return ok("Zarejestrowano pomyslnie");
+        return ok(views.html.confirm.render("Zarejestrowano pomyślnie.", "login.html"));
     }
 
     // Input: user's login and password at edukacja.pwr.wroc.pl

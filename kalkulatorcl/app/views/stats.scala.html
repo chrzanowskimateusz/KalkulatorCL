@@ -1,4 +1,4 @@
-@(isSubject: Boolean, subject: String, userLogin: String, avgSubject: String, avgUser: String, counts: List[String], marks: List[Mark])
+@(isSubject: Boolean, subject: String, userLogin: String, avgSubject: String, avgUser: String, counts: List[String], marks: List[String])
 <!DOCTYPE HTML>
 <html lang="pl">
 <head>
@@ -19,7 +19,7 @@
     <div class="header">Kalkulator średniej</div>
 
     <div class='view-main'>
-        <p class="message" id="logout"> <a href="@routes.HomeController.panel">Powrót</a> </p>
+        <p class="message" id="logout"> <a href="@routes.AdminController.panel">Powrót</a> </p>
         @if(isSubject){
         <h1>Panel statystyk</h1>
         <br>
@@ -46,7 +46,7 @@
         } else {
         <h1>Panel statystyk</h1>
         <br>
-        <div class='avg-msg'>Średnia użytkownika @userLogin:</div>
+        <div class='avg-msg'>Oceny użytkownika @userLogin:</div>
         <div class='avg-view'>@avgUser</div>
 
         <br><br>

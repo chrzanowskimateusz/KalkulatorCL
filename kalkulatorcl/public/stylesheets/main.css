@@ -15,6 +15,11 @@ body
     color: #ffffff;
 }
 
+#logout{
+    text-align: right;
+
+}
+
 #container
 {
     width: 1000px;

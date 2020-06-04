@@ -47,6 +47,10 @@ public class AdminController extends Controller {
             .addingToSession(request, "connected", user.login);
     }
 
+    public Result logout(Http.Request request) {
+        return redirect("/").removingFromSession(request, "connected");
+    }
+
     public Result panel(Http.Request request){
         return request
             .session()

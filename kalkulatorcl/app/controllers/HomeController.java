@@ -65,7 +65,7 @@ public class HomeController extends Controller {
         {
             return ok(views.html.confirm.render("Podany użytkownik już istnieje!", "register.html"));
         }
-        return ok(views.html.confirm.render("Zarejestrowano pomyślnie.", "login.html"));
+        return ok(views.html.confirm.render("Zarejestrowano pomyślnie.", "login"));
     }
 
     // Input: user's login and password at edukacja.pwr.wroc.pl
@@ -194,7 +194,11 @@ public class HomeController extends Controller {
             subject.id= id.get(i);
             subject.name = name.get(i);
             subject.weight = weight.get(i);
-
+            Mark mark = new Mark();
+            mark.user = User.findByLogin(userLogin);
+            mark.subject = subject;
+            mark.value = value.get(i);
+            marks.add(mark);
 
             if(saveToDatabase == true)
             {
@@ -202,12 +206,9 @@ public class HomeController extends Controller {
                 {
                     subject.save();
                 }
-                Mark mark = new Mark();
-                mark.user = User.findByLogin(userLogin);
-                mark.subject = Subject.findById(id.get(i));
-                mark.value = value.get(i);
+               
                 mark.save();
-                marks.add(mark);
+                
             }
 
         }

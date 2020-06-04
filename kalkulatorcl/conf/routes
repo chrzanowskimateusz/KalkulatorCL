@@ -30,6 +30,7 @@ POST    /register.html              controllers.HomeController.registerSubmit(re
 
 # Controller for adminpanel
 GET     /login                      controllers.AdminController.loginSite
+GET     /logout                     controllers.AdminController.logout(request:Request)
 +nocsrf
 POST    /login                      controllers.AdminController.login(request:Request)
 GET     /panel                      controllers.AdminController.panel(request:Request)
